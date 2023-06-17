@@ -1,8 +1,10 @@
 from sqlalchemy import create_engine
 from config.credentials import credentials
-
+import logging
 class SingletonConnection:
     _instance = None
+    def __init__(self) -> None:
+        self.logger = logging.getLogger(__name__)
 
     def __new__(cls):
         if not cls._instance:
@@ -16,4 +18,4 @@ class SingletonConnection:
         try:
            return self.engine
         except Exception as error:
-            print(error)
+           self.logger.error("connection error -", str(error))
