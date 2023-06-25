@@ -9,6 +9,7 @@ class Task(Base):
     name = Column(String(30), nullable=False, unique=False)
     description = Column(String(30), nullable=False, unique=False)
     priority = Column(String(30), nullable=False, unique=False)
+    status = Column(String(30), nullable=False, unique=False)
     created_at = Column(DateTime(),default=datetime.now())
 
     def __str__(self) -> str:
