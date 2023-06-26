@@ -1,7 +1,7 @@
 from database.conecctions import SingletonConnection
 from sqlalchemy import MetaData
 import logging
-import json
+from flask import jsonify
 from models.task_model import Task
 
 
@@ -49,4 +49,22 @@ class TaskManagement:
         return message, status
 
     def get_tasks(self):
-        pass
+        message = "retraving tasks list success"
+        status = 200
+        tasks = []
+        try:
+            result = self.session.query(Task).all()
+            for task in result:
+                tasks.append({
+                    "id": task.id,
+                    "description": task.description,
+                    "priority": task.priority,
+                    "status": task.status
+                })
+
+        except Exception as error:
+            self.logger.error(str(error))
+            message = "Internal server error"
+            status = 500
+        response = {"message": message, "tasks": tasks}
+        return jsonify(response), status
