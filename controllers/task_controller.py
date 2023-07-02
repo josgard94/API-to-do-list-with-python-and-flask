@@ -27,6 +27,24 @@ class TaskManagement:
 
         return message, status
 
+    def delete_task(self, data):
+        message = "task deleted success!!"
+        status = 200
+        item = self.session.query(Task).get(data.get("id"))
+        if item is None:
+            return "task don't exists!!", 404
+
+        try:
+            setattr(item, "deleted", data.get("deleted"))
+            self.session.commit()
+
+        except Exception as error:
+            self.session.rollback()
+            self.logger.error(str(error))
+            message = "Internal server error"
+            status = 500
+        return message, status
+
     def update_task(self, data):
         message = "task updated success!!"
         status = 200
@@ -59,7 +77,8 @@ class TaskManagement:
                     "id": task.id,
                     "description": task.description,
                     "priority": task.priority,
-                    "status": task.status
+                    "status": task.status,
+                    "deleted": task.deleted
                 })
 
         except Exception as error:
