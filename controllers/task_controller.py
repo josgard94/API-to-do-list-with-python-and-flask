@@ -71,7 +71,7 @@ class TaskManagement:
         status = 200
         tasks = []
         try:
-            result = self.session.query(Task).all()
+            result = self.session.query(Task).filter(Task.deleted != 1).all()
             for task in result:
                 tasks.append({
                     "id": task.id,
